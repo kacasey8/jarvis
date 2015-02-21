@@ -2,11 +2,11 @@
  "manifest_version": 2,
  "name": "Listen to Me",
  "version": "1",
- "permissions": [],
- "app": {
-   "background": {
-     "scripts": ["background.js"]
-   }
+ "description": "This extention allows you to control chrome using voice",
+
+ "browser_action": {
+ 	"default_popup":"popup.html"
  },
+ "permissions": [],
  "minimum_chrome_version": "28"
 }
