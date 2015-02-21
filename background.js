@@ -2,14 +2,20 @@
 
 $(document).ready(function() {
   var recognition = new webkitSpeechRecognition();
-  recognition.continuous = true;
   recognition.interimResults = true;
+  //recognition.continuous = true;
   recognition.onstart = function() {
     console.log("listen");
   };
 
   recognition.onerror = function(event) {
     console.log("ERROR: " + event.error);
+  };
+
+  recognition.onend = function(event) {
+    console.log("finished: ");
+    console.log(event);
+    recognition.start();
   };
 
   recognition.onresult = function(event) {
@@ -24,6 +30,13 @@ $(document).ready(function() {
     }
     console.log("FINAL: " + final_transcript);
     console.log("TMP: " + interim_transcript);
+
+    if(final_transcript == "YouTube") {
+      var newURL = "http://www.youtube.com/watch?v=oHg5SJYRHA0";
+      chrome.tabs.create({ url: newURL });
+      console.log('created');
+      recognition.stop();
+    }
     // final_span.innerHTML = linebreak(final_transcript);
     // interim_span.innerHTML = linebreak(interim_transcript);
     // if (final_transcript || interim_transcript) {
