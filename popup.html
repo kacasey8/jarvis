@@ -1,9 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-   <meta charset="utf-8">
+	<meta charset="utf-8">
+    <!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 </head>
 <body>
-   <h1>Hello, let's code!</h1>
+    <h1>Voice Command Settings</h1>
+    <form>
+	    <table class="table table-striped" id="settingsTable">
+	   		<tr>
+			    <th>Command</td>
+			    <th>Url</td> 
+			    <th></td>
+			</tr>
+			<tfoot>
+				<td><button type="button" class="add">Add</button></td>
+			</tfoot>
+	    </table>
+
+	</form>
 </body>
+<script src="jquery-2.1.3.min.js"></script>
+<script src="background.js"></script>
 </html>

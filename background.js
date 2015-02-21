@@ -1,6 +1,10 @@
 // React when a browser action's icon is clicked.
 
 $(document).ready(function() {
+  recognizer();
+});
+
+var recognizer = function() {
   var recognition = new webkitSpeechRecognition();
   recognition.interimResults = true;
   //recognition.continuous = true;
@@ -31,11 +35,8 @@ $(document).ready(function() {
     console.log("FINAL: " + final_transcript);
     console.log("TMP: " + interim_transcript);
 
-    if(final_transcript == "YouTube") {
-      var newURL = "http://www.youtube.com/watch?v=oHg5SJYRHA0";
-      chrome.tabs.create({ url: newURL });
-      console.log('created');
-      recognition.stop();
+    if(final_transcript == "youtube") {
+
     }
     // final_span.innerHTML = linebreak(final_transcript);
     // interim_span.innerHTML = linebreak(interim_transcript);
@@ -45,4 +46,4 @@ $(document).ready(function() {
   };
 
   recognition.start();
-});
+}
