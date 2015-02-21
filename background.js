@@ -18,11 +18,8 @@ chrome.browserAction.onClicked.addListener(function(tab) {
   });
 });
 
-$(document).ready(function() {
-	console.log("BOO");
-  recognizer();
-	function addRow(command, url) {
-		$("#settingsTable").find('tbody')
+function addRow(command, url) {
+	$("#settingsTable").find('tbody')
 	    .append($('<tr>')
 	        .append($('<td>')
 	            .append('<input type="text" name="command" value={0} >'.format(command)))
@@ -31,22 +28,27 @@ $(document).ready(function() {
 	        .append($('<td>')
 	            .append('<button type="button" class="delete">Delete</button>'))
 	    )
-	}
+	$('.delete').bind('click', function(e) {
+		console.log("DELETE");
+	    var row = e.target.parentNode.parentNode;
+	    console.log(row);
+	    $( row ).remove(); 
+	});
+}
+
+$(document).ready(function() {
+	console.log("BOO");
+  	
+  	recognizer();
 	
 	addRow("youtube", "www.youtube.com");
 
-	$('.delete').bind('click', function(e) {
-	    var row = e.target.parentNode.parentNode;
-	    $( row ).remove(); 
-	});
-
 	$('.add').bind('click', function(e) {
-		console.log("ADD");
 	    addRow("", "");
 	});
 });
 
-var recognizer = function() {
+function recognizer() {
   var recognition = new webkitSpeechRecognition();
   recognition.interimResults = true;
   //recognition.continuous = true;
