@@ -20,7 +20,7 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 
 $(document).ready(function() {
 	console.log("BOO");
-  recognizer();
+  	recognizer();
 	function addRow(command, url) {
 		$("#settingsTable").find('tbody')
 	    .append($('<tr>')
