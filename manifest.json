@@ -8,5 +8,8 @@
  	"default_popup":"popup.html"
  },
  "permissions": [],
+ "background": {
+    "scripts":["background.js"]
+ },
  "minimum_chrome_version": "28"
 }
