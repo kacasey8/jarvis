@@ -11,13 +11,6 @@ if (!String.prototype.format) {
   };
 }
 
-chrome.browserAction.onClicked.addListener(function(tab) {
-  console.log('Turning ' + tab.url + ' red!');
-  chrome.tabs.executeScript({
-    code: 'document.body.style.backgroundColor="red"'
-  });
-});
-
 function addRow(command, url) {
 	$("#settingsTable").find('tbody')
 	    .append($('<tr>')
@@ -36,15 +29,18 @@ function addRow(command, url) {
 	});
 }
 
+var currentTab;
 $(document).ready(function() {
-	console.log("BOO");
+	chrome.tabs.query({active:true,currentWindow:true},function(tab){
+	  currentTab = tab[0].url;
+	});
   	
   	recognizer();
 	
 	addRow("youtube", "www.youtube.com");
 
 	$('.add').bind('click', function(e) {
-	    addRow("", "");
+	    addRow("", currentTab);
 	});
 });
 
