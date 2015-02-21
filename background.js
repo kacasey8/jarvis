@@ -62,6 +62,10 @@ function recognizer() {
     recognition.start();
   };
 
+  recognition.onspeechend = function(event) {
+    console.log("end");
+  }
+
   recognition.onresult = function(event) {
     var interim_transcript = '';
     var final_transcript = '';
@@ -79,11 +83,12 @@ function recognizer() {
       var newURL = "http://www.youtube.com/watch?v=oHg5SJYRHA0";
       chrome.tabs.create({ url: newURL });
     }
-    // final_span.innerHTML = linebreak(final_transcript);
-    // interim_span.innerHTML = linebreak(interim_transcript);
-    // if (final_transcript || interim_transcript) {
-    //   showButtons('inline-block');
-    // }
+
+    if (final_transcript != "") {
+      recognition.stop();
+      // Just restart the recognizer, nothing else seems to work.
+      recognizer();
+    }
   };
 
   recognition.start();
