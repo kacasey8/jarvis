@@ -8,14 +8,15 @@
  	"default_popup":"popup.html"
  },
  "background": {
-    "scripts":["background.js"]
+    "scripts":["jquery-2.1.3.min.js", "background.js"]
  },
  "content_scripts": [
     {
-      "matches": ["https://www.google.com/*"],
+      "matches": ["<all_urls>"],
       "js": ["jquery-2.1.3.min.js", "content.js"]
     }
  ],
- "permissions": [],
- "minimum_chrome_version": "28"
+ "permissions": ["activeTab"],
+ "minimum_chrome_version": "28",
+ "options_page": "options.html"
 }
