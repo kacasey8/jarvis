@@ -77,8 +77,9 @@ var recognizer = function() {
     console.log("FINAL: " + final_transcript);
     console.log("TMP: " + interim_transcript);
 
-    if(final_transcript == "youtube") {
-
+    if(final_transcript == "YouTube") {
+      var newURL = "http://www.youtube.com/watch?v=oHg5SJYRHA0";
+      chrome.tabs.create({ url: newURL });
     }
     // final_span.innerHTML = linebreak(final_transcript);
     // interim_span.innerHTML = linebreak(interim_transcript);
