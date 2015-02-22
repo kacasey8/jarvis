@@ -135,11 +135,19 @@ function recognizer() {
 			recognition.stop();
 			// Just restart the recognizer, nothing else seems to work.
 			recognizer();
+
+			var msg = new SpeechSynthesisUtterance('');
+			msg.lang = 'en-UK';
+			msg.voice = window.speechSynthesis.getVoices().filter(function(voice) { return voice.name == 'Google UK English Male'; })[0];
+
 			for (var i = keys.length - 1; i >= 0; i--) {
 				if (keys[i].toLowerCase() == final_transcript.toLowerCase()) {
 					var arr = result[keys[i]];
 					var newURL = arr[0];
 					var javascript = arr[1];
+
+					msg.text = "Executing " + keys[i];
+					window.speechSynthesis.speak(msg);
 
 					if (newURL == "") {
 						chrome.tabs.query({active:true,currentWindow:true},function(tab){
@@ -166,28 +174,31 @@ function recognizer() {
 				};
 			};
 
+			
+
 			if (final_transcript.match(/^gmail(.*)/gi)) {
+				msg.text = "Opening Gmail";
+
 				arr = final_transcript.split(' ');
 				if (arr.length == 1) {
 					var newURL = "https://mail.google.com/mail/u/0";
 					chrome.tabs.create({ url: newURL });
 				} else {
-					arr.shift(); // remove first element (YouTube)
+					arr.shift(); // remove first element (Gmail)
 					var newURL = "https://mail.google.com/mail/u/" + arr.join(' ');
-
-					chrome.tabs.create({ url: newURL }, function(tab) {
-							new_tab_id = tab.id
-							chrome.tabs.executeScript(new_tab_id, { file: "youtube_first_link.js", runAt: "document_end" });
-						} 
-					);
+					chrome.tabs.create({ url: newURL });
 				}
 			} else if (final_transcript.match(/^YouTube(.*)/gi)) {
 				arr = final_transcript.split(' ');
 				if (arr.length == 1) {
+					msg.text = "Opening Youtube";
+
 					var newURL = "http://www.youtube.com";
 					chrome.tabs.create({ url: newURL });
 				} else {
 					arr.shift(); // remove first element (YouTube)
+
+					msg.text = "Playing " + arr.join(' ');
 					var newURL = "https://www.youtube.com/results?search_query=" + arr.join(' ');
 
 					chrome.tabs.create({ url: newURL }, function(tab) {
@@ -199,11 +210,15 @@ function recognizer() {
 			} else if (final_transcript.match(/^Google (.*)/gi)) {
 				arr = final_transcript.split(' ');
 				arr.shift(); // remove first element (Google)
+
+				msg.text = "Googling " + arr.join(' ');
 				var newURL = "https://www.google.com/search?gws_rd=ssl&q=" + arr.join(' ');
 				chrome.tabs.create({ url: newURL });
-			} else if (final_transcript.match(/^open (.*)\.(.*)/gi)) {
+			} else if (final_transcript.match(/^open (.*)/gi)) {
 				arr = final_transcript.split(' ');
 				arr.shift(); // remove first element (open)
+
+				msg.text = "Opening " + arr.join(' ');
 				if(final_transcript.indexOf('.') != -1) {
 					// don't assume
 					var newURL = "https://www." + arr.join('');
@@ -213,22 +228,22 @@ function recognizer() {
 					var newURL = "https://www." + arr.join('') + ".com";
 				}
 				chrome.tabs.create({ url: newURL });
-			} else if (final_transcript.match(/^open (.*)/gi)) {
-				arr = final_transcript.split(' ');
-				arr.shift(); // remove first element (open)
-				var newURL = "https://www." + arr.join('') + ".com";
-				chrome.tabs.create({ url: newURL });
 			} else if (final_transcript.match(/^document(s)?(.*)/gi)) {
 				arr = final_transcript.split(' ');
 				if (arr.length == 1) {
+					msg.text = "Opening Drive";
 					var newURL = "https://drive.google.com/drive";
 					chrome.tabs.create({ url: newURL });
 				} else {
 					arr.shift(); // remove first element (drive)
+
+					msg.text = "Opening document " + arr.join(' ');
 					var newURL = "https://drive.google.com/drive/#search?q=" + arr.join(' ');
 					chrome.tabs.create({ url: newURL });
 				}
 			}
+
+			window.speechSynthesis.speak(msg);
 		}
 	};
 
