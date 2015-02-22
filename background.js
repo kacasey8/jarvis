@@ -140,39 +140,41 @@ function recognizer() {
 			msg.lang = 'en-UK';
 			msg.voice = window.speechSynthesis.getVoices().filter(function(voice) { return voice.name == 'Google UK English Male'; })[0];
 
-			for (var i = keys.length - 1; i >= 0; i--) {
-				if (keys[i].toLowerCase() == final_transcript.toLowerCase()) {
-					var arr = result[keys[i]];
-					var newURL = arr[0];
-					var javascript = arr[1];
+			if(keys != undefined) {
+				for (var i = keys.length - 1; i >= 0; i--) {
+					if (keys[i].toLowerCase() == final_transcript.toLowerCase()) {
+						var arr = result[keys[i]];
+						var newURL = arr[0];
+						var javascript = arr[1];
 
-					msg.text = "Executing " + keys[i];
-					window.speechSynthesis.speak(msg);
+						msg.text = "Executing " + keys[i];
+						window.speechSynthesis.speak(msg);
 
-					if (newURL == "") {
-						chrome.tabs.query({active:true,currentWindow:true},function(tab){
-							chrome.tabs.executeScript(tab[0].id, { code: javascript, runAt: "document_end" });
-						});
-						return;
-					}
-
-					http_starter = "http://"
-					https_starter = "https://"
-
-					if (newURL.substring(0, http_starter.length) !== http_starter) {
-						if (newURL.substring(0, https_starter.length) !== https_starter) {
-							newURL = https_starter + newURL;
+						if (newURL == "") {
+							chrome.tabs.query({active:true,currentWindow:true},function(tab){
+								chrome.tabs.executeScript(tab[0].id, { code: javascript, runAt: "document_end" });
+							});
+							return;
 						}
-					}
 
-					chrome.tabs.create({ url: newURL }, function(tab) {
-							new_tab_id = tab.id;
-							chrome.tabs.executeScript(new_tab_id, { code: javascript, runAt: "document_end" });
-						} 
-					);
-					return;
+						http_starter = "http://"
+						https_starter = "https://"
+
+						if (newURL.substring(0, http_starter.length) !== http_starter) {
+							if (newURL.substring(0, https_starter.length) !== https_starter) {
+								newURL = https_starter + newURL;
+							}
+						}
+
+						chrome.tabs.create({ url: newURL }, function(tab) {
+								new_tab_id = tab.id;
+								chrome.tabs.executeScript(new_tab_id, { code: javascript, runAt: "document_end" });
+							} 
+						);
+						return;
+					};
 				};
-			};
+			}
 
 			
 
