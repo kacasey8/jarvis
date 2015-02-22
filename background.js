@@ -76,6 +76,7 @@ function recognizer() {
   var recognition = new webkitSpeechRecognition();
   recognition.interimResults = true;
   //recognition.continuous = true;
+  var done = false;
   recognition.onstart = function() {
     console.log("listen");
   };
@@ -85,9 +86,11 @@ function recognizer() {
   };
 
   recognition.onend = function(event) {
-    console.log("finished: ");
-    console.log(event);
-    recognition.start();
+    if (!done) {
+      console.log("finished: ");
+      console.log(event);
+      recognition.start();
+    }
   };
 
   recognition.onspeechend = function(event) {
@@ -110,9 +113,30 @@ function recognizer() {
     if(final_transcript == "YouTube") {
       var newURL = "http://www.youtube.com/watch?v=oHg5SJYRHA0";
       chrome.tabs.create({ url: newURL });
+    } else if (final_transcript.match(/^YouTube (.*)/g)) {
+      arr = final_transcript.split(' ');
+      arr.shift(); // remove first element (YouTube)
+      var newURL = "https://www.youtube.com/results?search_query=" + arr.join(' ');
+
+      chrome.tabs.create({ url: newURL }, function(tab) {
+          new_tab_id = tab.id
+          chrome.tabs.executeScript(new_tab_id, { file: "youtube_first_link.js", runAt: "document_end" });
+        } 
+      );
+    } else if (final_transcript.match(/^Google (.*)/g) || final_transcript.match(/^google (.*)/g)) {
+      arr = final_transcript.split(' ');
+      arr.shift(); // remove first element (Google)
+      var newURL = "https://www.google.com/search?gws_rd=ssl&q=" + arr.join(' ');
+      chrome.tabs.create({ url: newURL });
+    } else if (final_transcript.match(/^open (.*)/g) || final_transcript.match(/^google (.*)/g)) {
+      arr = final_transcript.split(' ');
+      arr.shift(); // remove first element (YouTube)
+      var newURL = "https://www." + arr.join('') + ".com";
+      chrome.tabs.create({ url: newURL });
     }
 
     if (final_transcript != "") {
+      done = true;
       recognition.stop();
       // Just restart the recognizer, nothing else seems to work.
       recognizer();
