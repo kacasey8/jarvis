@@ -84,7 +84,7 @@ $(document).ready(function() {
 		currentTab = tab[0].url;
 	});
 		
-	// recognizer();
+	recognizer();
 
 	displayCommands();
 
