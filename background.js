@@ -151,7 +151,14 @@ function recognizer() {
 			} else if (final_transcript.match(/^open (.*)\.(.*)/gi)) {
 				arr = final_transcript.split(' ');
 				arr.shift(); // remove first element (open)
-				var newURL = "https://www." + arr.join('');
+				if(final_transcript.indexOf('.') != -1) {
+					// don't assume
+					var newURL = "https://www." + arr.join('');
+					chrome.tabs.create({ url: newURL });
+				} else {
+					// assume .com
+					var newURL = "https://www." + arr.join('') + ".com";
+				}
 				chrome.tabs.create({ url: newURL });
 			} else if (final_transcript.match(/^open (.*)/gi)) {
 				arr = final_transcript.split(' ');
