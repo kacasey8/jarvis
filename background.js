@@ -58,7 +58,7 @@ function displayCommands() {
 		result = items["command"];
 		keys = Object.keys(result);
 		for (var i = 0; i < keys.length; i++) {
-			addRow(keys[i], result[keys[i]], "");
+			addRow(keys[i], result[keys[i]][0], result[keys[i]][1]);
 		}
 	});
 }
@@ -70,9 +70,10 @@ function updateStorage() {
 		for (var i = 1; i < rows.length - 1; i++) { // Ignore the header and add button
 			var command = rows[i].children[0].firstChild.value;
 			var url = rows[i].children[1].firstChild.value;
-			dict[command] = url
+			var script = rows[i].children[2].firstChild.value;
+			dict[command] = [url, script];
 		}
-			
+		console.log(dict);
 		chrome.storage.sync.set({'command': dict}, function() {
 				// Notify that we saved.
 				message('Settings saved');
@@ -86,7 +87,7 @@ $(document).ready(function() {
 		currentTab = tab[0].url;
 	});
 		
-	recognizer();
+	// recognizer();
 
 	displayCommands();
 
