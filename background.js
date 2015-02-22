@@ -17,15 +17,43 @@ function addRow(command, url) {
 	        .append($('<td>')
 	            .append('<input type="text" name="command" value={0} >'.format(command)))
 	        .append($('<td>')
-	            .append('<input type="text" name="url" value={0} >'.format(url)))
+	            .append('<input type="text" name="url" value={0} previous={0}>'.format(url)))
 	        .append($('<td>')
 	            .append('<button type="button" class="delete">Delete</button>'))
 	    )
+
+	$( "input[type='text']" ).change(function() {
+  		chrome.storage.sync.clear(function() {
+  			var rows = $('tr');
+			var dict = {};
+			for (var i = 1; i < rows.length - 1; i++) { // Ignore the header and add button
+				var command = rows[i].children[0].firstChild.value;
+				var url = rows[i].children[1].firstChild.value;
+				dict[command] = url
+			}
+  			
+  			chrome.storage.sync.set({'command': dict}, function() {
+		        // Notify that we saved.
+		        message('Settings saved');
+		    });
+  		});
+		
+	});
+
 	$('.delete').bind('click', function(e) {
-		console.log("DELETE");
 	    var row = e.target.parentNode.parentNode;
 	    console.log(row);
 	    $( row ).remove(); 
+	});
+}
+
+function displayCommands() {
+	var rows = chrome.storage.sync.get('command', function(items) {
+		var result = items["command"];
+		var keys = Object.keys(result);
+		for (var i = 0; i < keys.length; i++) {
+			addRow(keys[i], result[keys[i]]);
+		}
 	});
 }
 
@@ -35,9 +63,9 @@ $(document).ready(function() {
 	  currentTab = tab[0].url;
 	});
   	
-  	recognizer();
-	
-	addRow("youtube", "www.youtube.com");
+  	// recognizer();
+
+	displayCommands();
 
 	$('.add').bind('click', function(e) {
 	    addRow("", currentTab);
