@@ -38,6 +38,12 @@ function addRow(command, url) {
 		updateStorage();
 	});
 
+	$( "input[type='text']" ).keypress(function (e) {
+	  if (e.which == 13) {
+	    window.close();
+	  }
+	});
+
 	$('.delete').bind('click', function(e) {
 		var row = e.target.parentNode.parentNode;
 		$( row ).remove(); 
