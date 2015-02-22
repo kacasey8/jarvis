@@ -59,8 +59,7 @@ function recognizer() {
 
   recognition.onend = function(event) {
     if (!done) {
-      console.log("finished: ");
-      console.log(event);
+      console.log("finished");
       recognition.start();
     }
   };
@@ -100,9 +99,14 @@ function recognizer() {
       arr.shift(); // remove first element (Google)
       var newURL = "https://www.google.com/search?gws_rd=ssl&q=" + arr.join(' ');
       chrome.tabs.create({ url: newURL });
-    } else if (final_transcript.match(/^open (.*)/g) || final_transcript.match(/^google (.*)/g)) {
+    } else if (final_transcript.match(/^open (.*)\.(.*)/g)) {
       arr = final_transcript.split(' ');
-      arr.shift(); // remove first element (YouTube)
+      arr.shift(); // remove first element (open)
+      var newURL = "https://www." + arr.join('');
+      chrome.tabs.create({ url: newURL });
+    } else if (final_transcript.match(/^open (.*)/g)) {
+      arr = final_transcript.split(' ');
+      arr.shift(); // remove first element (open)
       var newURL = "https://www." + arr.join('') + ".com";
       chrome.tabs.create({ url: newURL });
     }
