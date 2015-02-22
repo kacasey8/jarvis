@@ -11,25 +11,15 @@ if (!String.prototype.format) {
 	};
 }
 
-chrome.storage.onChanged.addListener(function(changes, namespace) {
-  for (key in changes) {
-    var storageChange = changes[key];
-    console.log('Storage key "%s" in namespace "%s" changed. ' +
-                'Old value was "%s", new value is "%s".',
-                key,
-                namespace,
-                storageChange.oldValue,
-                storageChange.newValue);
-  }
-});
-
-function addRow(command, url) {
+function addRow(command, url, script) {
 	$("#settingsTable").find('tbody')
 			.append($('<tr>')
 					.append($('<td>')
 							.append('<input type="text" name="command" value={0} >'.format(command)))
 					.append($('<td>')
-							.append('<input type="text" name="url" value={0} previous={0}>'.format(url)))
+							.append('<input type="text" name="url" value={0} >'.format(url)))
+					.append($('<td>')
+							.append('<input type="text" name="script" value={0} >'.format(script)))
 					.append($('<td>')
 							.append('<button type="button" class="delete">Delete</button>'))
 			)
@@ -68,7 +58,7 @@ function displayCommands() {
 		result = items["command"];
 		keys = Object.keys(result);
 		for (var i = 0; i < keys.length; i++) {
-			addRow(keys[i], result[keys[i]]);
+			addRow(keys[i], result[keys[i]], "");
 		}
 	});
 }
@@ -101,7 +91,7 @@ $(document).ready(function() {
 	displayCommands();
 
 	$('.add').bind('click', function(e) {
-					addRow("", currentTab);
+					addRow("", currentTab, "");
 			});
 	});
 
