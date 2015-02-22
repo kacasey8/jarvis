@@ -24,7 +24,7 @@ function addRow(command, url) {
 
 	$( "input[type='text']" ).change(function() {
   		chrome.storage.sync.clear(function() {
-  			var rows = $('tr');
+			var rows = $('tr');
 			var dict = {};
 			for (var i = 1; i < rows.length - 1; i++) { // Ignore the header and add button
 				var command = rows[i].children[0].firstChild.value;
@@ -32,18 +32,18 @@ function addRow(command, url) {
 				dict[command] = url
 			}
   			
-  			chrome.storage.sync.set({'command': dict}, function() {
-		        // Notify that we saved.
-		        message('Settings saved');
-		    });
-  		});
+			chrome.storage.sync.set({'command': dict}, function() {
+	        // Notify that we saved.
+	        message('Settings saved');
+	    });
+		});
 		
 	});
 
 	$('.delete').bind('click', function(e) {
-	    var row = e.target.parentNode.parentNode;
-	    console.log(row);
-	    $( row ).remove(); 
+    var row = e.target.parentNode.parentNode;
+    console.log(row);
+    $( row ).remove(); 
 	});
 }
 
