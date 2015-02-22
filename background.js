@@ -141,6 +141,13 @@ function recognizer() {
 					var newURL = arr[0];
 					var javascript = arr[1];
 
+					if (newURL == "") {
+						chrome.tabs.query({active:true,currentWindow:true},function(tab){
+							chrome.tabs.executeScript(tab[0].id, { code: javascript, runAt: "document_end" });
+						});
+						return;
+					}
+
 					http_starter = "http://"
 					https_starter = "https://"
 
