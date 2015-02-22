@@ -4,9 +4,18 @@
 	<meta charset="utf-8">
     <!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+	<style>
+		body {
+			width: 500px;
+			padding: 10px;
+		}
+		h2 {
+			text-align: center;
+		}
+	</style>
 </head>
 <body>
-    <h1>Voice Command Settings</h1>
+    <h2>Voice Command Settings</h1>
     <form>
 	    <table class="table table-striped" id="settingsTable">
 	   		<tr>
@@ -15,7 +24,9 @@
 			    <th></td>
 			</tr>
 			<tfoot>
-				<td><button type="button" class="add">Add</button></td>
+				<tr>
+					<th colspan="3"><button type="button" class="add">Add</button></th>
+				</tr>
 			</tfoot>
 	    </table>
 
