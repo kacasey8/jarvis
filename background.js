@@ -15,13 +15,13 @@ function addRow(command, url, script) {
 	$("#settingsTable").find('tbody')
 			.append($('<tr>')
 					.append($('<td>')
-							.append('<input type="text" name="command" value="{0}" >'.format(command)))
+							.append('<input type="text" name="command" class="form-control" value="{0}" >'.format(command)))
 					.append($('<td>')
-							.append('<input type="text" name="url" value="{0}" >'.format(url)))
+							.append('<input type="text" name="url" class="form-control" value="{0}" >'.format(url)))
 					.append($('<td>')
-							.append('<textarea>' + script + '</textarea>'))
+							.append('<textarea class="form-control">' + script + '</textarea>'))
 					.append($('<td>')
-							.append('<button type="button" class="delete">Delete</button>'))
+							.append('<button type="button" class="delete btn btn-danger"">Delete</button>'))
 			)
 
 	$( "input[type='text'], textarea" ).keypress(function (e) {
