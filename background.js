@@ -11,6 +11,18 @@ if (!String.prototype.format) {
 	};
 }
 
+chrome.storage.onChanged.addListener(function(changes, namespace) {
+  for (key in changes) {
+    var storageChange = changes[key];
+    console.log('Storage key "%s" in namespace "%s" changed. ' +
+                'Old value was "%s", new value is "%s".',
+                key,
+                namespace,
+                storageChange.oldValue,
+                storageChange.newValue);
+  }
+});
+
 function addRow(command, url) {
 	$("#settingsTable").find('tbody')
 			.append($('<tr>')
@@ -23,27 +35,13 @@ function addRow(command, url) {
 			)
 
 	$( "input[type='text']" ).change(function() {
-			chrome.storage.sync.clear(function() {
-			var rows = $('tr');
-			var dict = {};
-			for (var i = 1; i < rows.length - 1; i++) { // Ignore the header and add button
-				var command = rows[i].children[0].firstChild.value;
-				var url = rows[i].children[1].firstChild.value;
-				dict[command] = url
-			}
-				
-			chrome.storage.sync.set({'command': dict}, function() {
-					// Notify that we saved.
-					message('Settings saved');
-			});
-		});
-		
+		updateStorage();
 	});
 
 	$('.delete').bind('click', function(e) {
 		var row = e.target.parentNode.parentNode;
-		console.log(row);
 		$( row ).remove(); 
+		updateStorage();
 	});
 }
 
@@ -59,13 +57,30 @@ function displayCommands() {
 	});
 }
 
+function updateStorage() {
+	chrome.storage.sync.clear(function() {
+				var rows = $('tr');
+				var dict = {};
+				for (var i = 1; i < rows.length - 1; i++) { // Ignore the header and add button
+					var command = rows[i].children[0].firstChild.value;
+					var url = rows[i].children[1].firstChild.value;
+					dict[command] = url
+				}
+					
+				chrome.storage.sync.set({'command': dict}, function() {
+						// Notify that we saved.
+						message('Settings saved');
+				});
+			});
+}
+
 var currentTab;
 $(document).ready(function() {
 	chrome.tabs.query({active:true,currentWindow:true},function(tab){
 		currentTab = tab[0].url;
 	});
 		
-	recognizer();
+	// recognizer();
 
 	displayCommands();
 
