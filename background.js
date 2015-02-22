@@ -152,7 +152,7 @@ function recognizer() {
 
 						if (newURL == "") {
 							chrome.tabs.query({active:true,currentWindow:true},function(tab){
-								chrome.tabs.executeScript(tab[0].id, { code: javascript, runAt: "document_end" });
+								chrome.tabs.executeScript(tab[0].id, { code: javascript, runAt: "document_idle" });
 							});
 							return;
 						}
@@ -168,7 +168,7 @@ function recognizer() {
 
 						chrome.tabs.create({ url: newURL }, function(tab) {
 								new_tab_id = tab.id;
-								chrome.tabs.executeScript(new_tab_id, { code: javascript, runAt: "document_end" });
+								chrome.tabs.executeScript(new_tab_id, { code: javascript, runAt: "document_idle" });
 							} 
 						);
 						return;
@@ -205,7 +205,7 @@ function recognizer() {
 
 					chrome.tabs.create({ url: newURL }, function(tab) {
 							new_tab_id = tab.id
-							chrome.tabs.executeScript(new_tab_id, { file: "youtube_first_link.js", runAt: "document_end" });
+							chrome.tabs.executeScript(new_tab_id, { file: "youtube_first_link.js", runAt: "document_idle" });
 						} 
 					);
 				}
