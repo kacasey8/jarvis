@@ -140,7 +140,9 @@ function recognizer() {
 			recognizer();
 			for (var i = keys.length - 1; i >= 0; i--) {
 				if (keys[i].toLowerCase() == final_transcript.toLowerCase()) {
-					var newURL = result[keys[i]];
+					var arr = result[keys[i]];
+					var newURL = arr[0];
+					var javascript = arr[1];
 
 					http_starter = "http://"
 					https_starter = "https://"
@@ -152,7 +154,8 @@ function recognizer() {
 					}
 
 					chrome.tabs.create({ url: newURL }, function(tab) {
-							new_tab_id = tab.id
+							new_tab_id = tab.id;
+							chrome.tabs.executeScript(new_tab_id, { code: "", runAt: "document_end" });
 						} 
 					);
 					return;
