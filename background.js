@@ -90,7 +90,7 @@ $(document).ready(function() {
 		currentTab = tab[0].url;
 	});
 		
-	// recognizer();
+	recognizer();
 
 	displayCommands();
 
@@ -145,6 +145,15 @@ function recognizer() {
 				if (keys[i].toLowerCase() == final_transcript.toLowerCase()) {
 					var newURL = result[keys[i]];
 
+					http_starter = "http://"
+					https_starter = "https://"
+
+					if (newURL.substring(0, http_starter.length) !== http_starter) {
+						if (newURL.substring(0, https_starter.length) !== https_starter) {
+							newURL = https_starter + newURL;
+						}
+					}
+
 					chrome.tabs.create({ url: newURL }, function(tab) {
 							new_tab_id = tab.id
 						} 
@@ -153,7 +162,22 @@ function recognizer() {
 				};
 			};
 
-			if (final_transcript.match(/^YouTube(.*)/gi)) {
+			if (final_transcript.match(/^gmail(.*)/gi)) {
+				arr = final_transcript.split(' ');
+				if (arr.length == 1) {
+					var newURL = "https://mail.google.com/mail/u/0";
+					chrome.tabs.create({ url: newURL });
+				} else {
+					arr.shift(); // remove first element (YouTube)
+					var newURL = "https://mail.google.com/mail/u/" + arr.join(' ');
+
+					chrome.tabs.create({ url: newURL }, function(tab) {
+							new_tab_id = tab.id
+							chrome.tabs.executeScript(new_tab_id, { file: "youtube_first_link.js", runAt: "document_end" });
+						} 
+					);
+				}
+			} else if (final_transcript.match(/^YouTube(.*)/gi)) {
 				arr = final_transcript.split(' ');
 				if (arr.length == 1) {
 					var newURL = "http://www.youtube.com";
