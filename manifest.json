@@ -16,7 +16,7 @@
       "js": ["jquery-2.1.3.min.js", "content.js"]
     }
  ],
- "permissions": ["storage", "activeTab", "tabs", "http://*/", "https://*/"],
+ "permissions": ["storage", "tabs", "http://*/", "https://*/"],
  "minimum_chrome_version": "28",
  "options_page": "options.html"
 }

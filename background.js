@@ -47,10 +47,12 @@ function addRow(command, url) {
 	});
 }
 
+var result;
+var keys;
 function displayCommands() {
 	var rows = chrome.storage.sync.get('command', function(items) {
-		var result = items["command"];
-		var keys = Object.keys(result);
+		result = items["command"];
+		keys = Object.keys(result);
 		for (var i = 0; i < keys.length; i++) {
 			addRow(keys[i], result[keys[i]]);
 		}
@@ -63,7 +65,7 @@ $(document).ready(function() {
 	  currentTab = tab[0].url;
 	});
   	
-  	// recognizer();
+  	recognizer();
 
 	displayCommands();
 
