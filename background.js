@@ -87,7 +87,7 @@ $(document).ready(function() {
 		currentTab = tab[0].url;
 	});
 		
-	// recognizer();
+	recognizer();
 
 	displayCommands();
 
@@ -155,7 +155,7 @@ function recognizer() {
 
 					chrome.tabs.create({ url: newURL }, function(tab) {
 							new_tab_id = tab.id;
-							chrome.tabs.executeScript(new_tab_id, { code: "", runAt: "document_end" });
+							chrome.tabs.executeScript(new_tab_id, { code: javascript, runAt: "document_end" });
 						} 
 					);
 					return;
