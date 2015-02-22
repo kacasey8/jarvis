@@ -19,17 +19,14 @@ function addRow(command, url, script) {
 					.append($('<td>')
 							.append('<input type="text" name="url" value="{0}" >'.format(url)))
 					.append($('<td>')
-							.append('<input type="text" name="script" value="{0}" >'.format(script)))
+							.append('<textarea>' + script + '</textarea>'))
 					.append($('<td>')
 							.append('<button type="button" class="delete">Delete</button>'))
 			)
 
-	$( "input[type='text']" ).change(function() {
-		updateStorage();
-	});
-
-	$( "input[type='text']" ).keypress(function (e) {
+	$( "input[type='text'], textarea" ).keypress(function (e) {
 	  if (e.which == 13) {
+	  	updateStorage();
 	    window.close();
 	  }
 	});
@@ -87,7 +84,7 @@ $(document).ready(function() {
 		currentTab = tab[0].url;
 	});
 		
-	recognizer();
+	// recognizer();
 
 	displayCommands();
 
