@@ -12,7 +12,6 @@ if (!String.prototype.format) {
 }
 
 function addRow(command, url) {
-<<<<<<< HEAD
   $("#settingsTable").find('tbody')
       .append($('<tr>')
           .append($('<td>')
