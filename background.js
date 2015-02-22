@@ -224,7 +224,6 @@ function recognizer() {
 				if(final_transcript.indexOf('.') != -1) {
 					// don't assume
 					var newURL = "https://www." + arr.join('');
-					chrome.tabs.create({ url: newURL });
 				} else {
 					// assume .com
 					var newURL = "https://www." + arr.join('') + ".com";
