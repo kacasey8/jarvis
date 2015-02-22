@@ -12,45 +12,45 @@ if (!String.prototype.format) {
 }
 
 function addRow(command, url) {
-	$("#settingsTable").find('tbody')
-	    .append($('<tr>')
-	        .append($('<td>')
-	            .append('<input type="text" name="command" value={0} >'.format(command)))
-	        .append($('<td>')
-	            .append('<input type="text" name="url" value={0} previous={0}>'.format(url)))
-	        .append($('<td>')
-	            .append('<button type="button" class="delete">Delete</button>'))
-	    )
+  $("#settingsTable").find('tbody')
+      .append($('<tr>')
+          .append($('<td>')
+              .append('<input type="text" name="command" value={0} >'.format(command)))
+          .append($('<td>')
+              .append('<input type="text" name="url" value={0} previous={0}>'.format(url)))
+          .append($('<td>')
+              .append('<button type="button" class="delete">Delete</button>'))
+      )
 
-	$( "input[type='text']" ).change(function() {
-  		chrome.storage.sync.clear(function() {
-  			var rows = $('tr');
-			var dict = {};
-			for (var i = 1; i < rows.length - 1; i++) { // Ignore the header and add button
-				var command = rows[i].children[0].firstChild.value;
-				var url = rows[i].children[1].firstChild.value;
-				dict[command] = url
-			}
-  			
-  			chrome.storage.sync.set({'command': dict}, function() {
-		        // Notify that we saved.
-		        message('Settings saved');
-		    });
-  		});
-		
-	});
+  $( "input[type='text']" ).change(function() {
+      chrome.storage.sync.clear(function() {
+      var rows = $('tr');
+      var dict = {};
+      for (var i = 1; i < rows.length - 1; i++) { // Ignore the header and add button
+        var command = rows[i].children[0].firstChild.value;
+        var url = rows[i].children[1].firstChild.value;
+        dict[command] = url
+      }
+        
+      chrome.storage.sync.set({'command': dict}, function() {
+          // Notify that we saved.
+          message('Settings saved');
+      });
+    });
+    
+  });
 
-	$('.delete').bind('click', function(e) {
-	    var row = e.target.parentNode.parentNode;
-	    console.log(row);
-	    $( row ).remove(); 
-	});
+  $('.delete').bind('click', function(e) {
+    var row = e.target.parentNode.parentNode;
+    console.log(row);
+    $( row ).remove(); 
+  });
 }
 
 var result;
 var keys;
 function displayCommands() {
-	var rows = chrome.storage.sync.get('command', function(items) {
+	chrome.storage.sync.get('command', function(items) {
 		result = items["command"];
 		keys = Object.keys(result);
 		for (var i = 0; i < keys.length; i++) {
@@ -70,9 +70,9 @@ $(document).ready(function() {
 	displayCommands();
 
 	$('.add').bind('click', function(e) {
-	    addRow("", currentTab);
+	      	addRow("", currentTab);
+	  	});
 	});
-});
 
 function recognizer() {
   var recognition = new webkitSpeechRecognition();
@@ -89,8 +89,7 @@ function recognizer() {
 
   recognition.onend = function(event) {
     if (!done) {
-      console.log("finished: ");
-      console.log(event);
+      console.log("finished");
       recognition.start();
     }
   };
@@ -112,36 +111,54 @@ function recognizer() {
     console.log("FINAL: " + final_transcript);
     console.log("TMP: " + interim_transcript);
 
-    if(final_transcript == "YouTube") {
-      var newURL = "http://www.youtube.com/watch?v=oHg5SJYRHA0";
-      chrome.tabs.create({ url: newURL });
-    } else if (final_transcript.match(/^YouTube (.*)/g)) {
-      arr = final_transcript.split(' ');
-      arr.shift(); // remove first element (YouTube)
-      var newURL = "https://www.youtube.com/results?search_query=" + arr.join(' ');
-
-      chrome.tabs.create({ url: newURL }, function(tab) {
-          new_tab_id = tab.id
-          chrome.tabs.executeScript(new_tab_id, { file: "youtube_first_link.js", runAt: "document_end" });
-        } 
-      );
-    } else if (final_transcript.match(/^Google (.*)/g) || final_transcript.match(/^google (.*)/g)) {
-      arr = final_transcript.split(' ');
-      arr.shift(); // remove first element (Google)
-      var newURL = "https://www.google.com/search?gws_rd=ssl&q=" + arr.join(' ');
-      chrome.tabs.create({ url: newURL });
-    } else if (final_transcript.match(/^open (.*)/g) || final_transcript.match(/^google (.*)/g)) {
-      arr = final_transcript.split(' ');
-      arr.shift(); // remove first element (YouTube)
-      var newURL = "https://www." + arr.join('') + ".com";
-      chrome.tabs.create({ url: newURL });
-    }
-
     if (final_transcript != "") {
       done = true;
       recognition.stop();
       // Just restart the recognizer, nothing else seems to work.
       recognizer();
+      for (var i = keys.length - 1; i >= 0; i--) {
+        keys[i]
+
+        if (keys[i] == final_transcript) {
+          var newURL = result[keys[i]];
+
+          chrome.tabs.create({ url: newURL }, function(tab) {
+              new_tab_id = tab.id
+            } 
+          );
+          return;
+        };
+      };
+
+      if (final_transcript == "YouTube") {
+        var newURL = "http://www.youtube.com/watch?v=oHg5SJYRHA0";
+        chrome.tabs.create({ url: newURL });
+      } else if (final_transcript.match(/^YouTube (.*)/gi)) {
+        arr = final_transcript.split(' ');
+        arr.shift(); // remove first element (YouTube)
+        var newURL = "https://www.youtube.com/results?search_query=" + arr.join(' ');
+
+        chrome.tabs.create({ url: newURL }, function(tab) {
+            new_tab_id = tab.id
+            chrome.tabs.executeScript(new_tab_id, { file: "youtube_first_link.js", runAt: "document_end" });
+          } 
+        );
+      } else if (final_transcript.match(/^Google (.*)/gi)) {
+        arr = final_transcript.split(' ');
+        arr.shift(); // remove first element (Google)
+        var newURL = "https://www.google.com/search?gws_rd=ssl&q=" + arr.join(' ');
+        chrome.tabs.create({ url: newURL });
+      } else if (final_transcript.match(/^open (.*)\.(.*)/g)) {
+        arr = final_transcript.split(' ');
+        arr.shift(); // remove first element (open)
+        var newURL = "https://www." + arr.join('');
+        chrome.tabs.create({ url: newURL });
+      } else if (final_transcript.match(/^open (.*)/g)) {
+        arr = final_transcript.split(' ');
+        arr.shift(); // remove first element (open)
+        var newURL = "https://www." + arr.join('') + ".com";
+        chrome.tabs.create({ url: newURL });
+      }
     }
   };
 
