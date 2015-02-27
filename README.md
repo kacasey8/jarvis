@@ -15,4 +15,14 @@ Finally, for the programmers out there, we have included a script field that wou
 As an example, we can post on a friend’s wall like this. Or we can do something more useful such as turn this light on/off with whatever commands we like. 
 We are excited to see what commands you will create because with Jarvis, anyone can be Ironman. 
 
-[Youtube](https://www.youtube.com/watch?v=macKkuXwMr8)
+[Youtube](https://www.youtube.com/watch?v=tYwndoL8l0I)
+
+# Status
+
+This has yet to be worked on after the hackathon and thus is somewhat clunky. We welcome pull requests.
+
+# Setup
+
+After initiating the app you have to go to the options page. This is so the chrome app can get permissions to use the microphone. The options page is a basic page that just displays your own video and audio back to you.
+After getting permissions you can watch the background page console for logging information about the voice recognition.
+The TMP: logs are partial completes of the voice recognition, and when you stop talking the TMP will become FINAL: and will attempt to execute the command listed under FINAL.
